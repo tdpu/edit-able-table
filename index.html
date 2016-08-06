@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>edit-able table</title>
+  </head>
+  <style>
+    body {
+      font-family: monospace;
+      background: black;
+      color: white;
+      text-align: center;
+    }
+    .the-price {
+      font-size: 24px;
+    }
+  </style>
+
+  <body>
+    <h1>edit-able table</h1>
+    <div align: center>
+      We are using node <script>document.write(process.versions.node)</script>,
+      Chrome <script>document.write(process.versions.chrome)</script>,<br>
+      and Electron <script>document.write(process.versions.electron)</script>.
+    </div>
+    <div>
+      <div class="the-price" id="price"> $100 </div>
+      <!-- Initialize Table -->
+      <table id="myTable" align="center">
+        <thead>
+            <tr>
+                <th>My Header  <button type="button", onclick="ins_cell()">Click Me!</button>  </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td contenteditable="true">aaaaa</td>
+            </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>My footer</td>
+          </tr>
+        <tfoot>
+      </table>
+      <script>
+        var tableRef = document.getElementById('myTable').getElementsByTagName('tbody')[0];
+
+        // Insert a row in the table at the last row
+        var newRow   = tableRef.insertRow(tableRef.rows.length);
+
+        // Insert a cell in the row at index 0
+        var newCell  = newRow.insertCell(0);
+
+        // Append a text node to the cell
+        var newText  = document.createTextNode('New row');
+        newCell.appendChild(newText);
+      </script>
+      <!-- Add a row -->
+      <script>
+        var request = require('request')
+        request("https://www.google.com/finance/info?client=ig&q=goog", function(error, response, body) {
+          body = body.slice(3);
+          body = JSON.parse(body);
+          console.log(body);
+          newPrice(body);
+        });
+        function newPrice(arr) {
+          currentPrice = arr[0]["l"];
+          document.getElementById("price").innerHTML = currentPrice;
+        }
+        function ins_cell(tableRef) {
+          var tableRef = document.getElementById('myTable').getElementsByTagName('tbody')[0];
+          // Insert a row in the table at the last row
+          var newRow   = tableRef.insertRow(tableRef.rows.length);
+          // Insert a cell in the row at index 0
+          var newCell  = newRow.insertCell(0);
+
+          // Append a text node to the cell
+          var newText  = document.createTextNode('New whefal;ehwf');
+          newCell.appendChild(newText);
+        }
+      </script>
+
+    </div>
+  </body>
+</html>
