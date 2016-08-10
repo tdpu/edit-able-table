@@ -29,12 +29,14 @@
       <table id="myTable" align="center">
         <thead>
             <tr>
-                <th>My Header  <button type="button", onclick="ins_cell()">Click Me!</button>  </th>
+                <th>Ticker</th>
+                <th>Price <button type="button", onclick="ins_cell()">Click Me!</button>  </th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td contenteditable="true">aaaaa</td>
+                <td><div id="edit1", contenteditable="true">edit-me</div></td>
+                <td><div id="price1">???</div></td>
             </tr>
         </tbody>
         <tfoot>
@@ -43,7 +45,13 @@
           </tr>
         <tfoot>
       </table>
+
+      <!-- Some important scripts -->
+      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+      <script type="text/javascript">var request = require('request')</script>
+      <!-- Table JavaScript -->
       <script>
+        // Initialize table
         var tableRef = document.getElementById('myTable').getElementsByTagName('tbody')[0];
 
         // Insert a row in the table at the last row
@@ -55,20 +63,8 @@
         // Append a text node to the cell
         var newText  = document.createTextNode('New row');
         newCell.appendChild(newText);
-      </script>
-      <!-- Add a row -->
-      <script>
-        var request = require('request')
-        request("https://www.google.com/finance/info?client=ig&q=goog", function(error, response, body) {
-          body = body.slice(3);
-          body = JSON.parse(body);
-          console.log(body);
-          newPrice(body);
-        });
-        function newPrice(arr) {
-          currentPrice = arr[0]["l"];
-          document.getElementById("price").innerHTML = currentPrice;
-        }
+
+        // function to add a new row
         function ins_cell(tableRef) {
           var tableRef = document.getElementById('myTable').getElementsByTagName('tbody')[0];
           // Insert a row in the table at the last row
@@ -80,6 +76,41 @@
           var newText  = document.createTextNode('New whefal;ehwf');
           newCell.appendChild(newText);
         }
+      </script>
+      <!-- Ticker price JavaScript -->
+      <script>
+        //var request = require('request')
+        function getPrice(ticker, postPrice) {
+          // get the stuff
+          //request("https://www.google.com/finance/info?client=ig&q=goog", function(error, response, body) {
+          request("https://www.google.com/finance/info?client=ig&q=" + ticker, function(error, response, body) {
+            // gives a nice JSON array with stock info
+            body = body.slice(3);
+            body = JSON.parse(body);
+            //console.log(body);
+            currentPrice = body[0]["l"];
+            postPrice(currentPrice);
+          });
+        }
+        getPrice("goog", function(theprice) {
+          document.getElementById("price").innerHTML = theprice;
+        });
+
+        // Whenever a 'contenteditable' is finished with ENTER
+        $('div[contenteditable]').keydown(function(e) {
+          // trap the return key being pressed
+          if (e.keyCode === 13) {
+            // Don't enter a newline
+            // prevent the default behaviour of return key pressed
+            document.execCommand('insertHTML', false, '');
+            // get the ticker symbol and update the price
+            ticker = document.getElementById('edit1').innerHTML;
+            getPrice(ticker, function(theprice) {
+              document.getElementById("price1").innerHTML = theprice;
+            });
+            return false;
+          }
+        });
       </script>
 
     </div>
