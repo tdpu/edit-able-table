@@ -30,18 +30,19 @@
         <thead>
             <tr>
                 <th>Ticker</th>
-                <th>Price <button type="button", onclick="ins_cell()">Click Me!</button>  </th>
+                <th>Price <button type="button", onclick="createRow()">Click Me!</button>  </th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td><div id="edit1", contenteditable="true">edit-me</div></td>
-                <td><div id="price1">???</div></td>
+                <td><div id="price1">---</div></td>
             </tr>
         </tbody>
         <tfoot>
           <tr>
-            <td>My footer</td>
+            <td>Total</td>
+            <td>$100</td>
           </tr>
         <tfoot>
       </table>
@@ -54,47 +55,50 @@
         // Initialize table
         var tableRef = document.getElementById('myTable').getElementsByTagName('tbody')[0];
 
-        // Insert a row in the table at the last row
-        var newRow   = tableRef.insertRow(tableRef.rows.length);
+        // // Insert a row in the table at the last row
+        // var newRow   = tableRef.insertRow(tableRef.rows.length);
+        // // Insert a cell in the row at index 0
+        // var newCell  = newRow.insertCell(0);
+        // // Append a text node to the cell
+        // var newText  = document.createTextNode('New row');
+        // newCell.appendChild(newText);
 
-        // Insert a cell in the row at index 0
-        var newCell  = newRow.insertCell(0);
-
-        // Append a text node to the cell
-        var newText  = document.createTextNode('New row');
-        newCell.appendChild(newText);
-
-        // function to add a new row
-        function ins_cell(tableRef) {
-          var tableRef = document.getElementById('myTable').getElementsByTagName('tbody')[0];
-          // Insert a row in the table at the last row
-          var newRow   = tableRef.insertRow(tableRef.rows.length);
-          // Insert a cell in the row at index 0
-          var newCell  = newRow.insertCell(0);
-
-          // Append a text node to the cell
-          var newText  = document.createTextNode('New whefal;ehwf');
-          newCell.appendChild(newText);
+        // create a row with the appropriate columns
+        // ticker | price | quantity | total | % of portfolio
+        function createRow() {
+          // get the table handle
+          var folioTable = document.getElementById('myTable').getElementsByTagName('tbody')[0];
+          // create a row at the last row index
+          var row = folioTable.insertRow(folioTable.rows.length);
+          // fill the cells
+          // the ticker symbol
+          var tickerCell = row.insertCell(0);
+          tickerContent = document.createElement('div');
+          tickerContent.setAttribute("id", "edit2");
+          tickerContent.setAttribute("contenteditable", true);
+          tickerContent.innerHTML = "TICKER";
+          tickerCell.appendChild(tickerContent);
+          // the stock price
+          var priceCell = row.insertCell(1);
+          priceContent = document.createElement('div');
+          priceContent.setAttribute("id", "price2");
+          priceContent.innerHTML = "---"
+          priceCell.appendChild(priceContent);
         }
+
       </script>
       <!-- Ticker price JavaScript -->
       <script>
-        //var request = require('request')
         function getPrice(ticker, postPrice) {
-          // get the stuff
-          //request("https://www.google.com/finance/info?client=ig&q=goog", function(error, response, body) {
+          // get the price for the desired ticker symbol
           request("https://www.google.com/finance/info?client=ig&q=" + ticker, function(error, response, body) {
             // gives a nice JSON array with stock info
             body = body.slice(3);
             body = JSON.parse(body);
-            //console.log(body);
             currentPrice = body[0]["l"];
             postPrice(currentPrice);
           });
         }
-        //getPrice("goog", function(theprice) {
-        //  document.getElementById("price").innerHTML = theprice;
-        //});
 
         // Whenever a 'contenteditable' is finished with ENTER
         $('div[contenteditable]').keydown(function(e) {
